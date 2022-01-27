@@ -11,7 +11,7 @@
 /**     changes to this file.                               **/
 /*************************************************************/
 #include "EMULib.h"
-#include "Sound.h"
+#include "SoundMSX.h"
 
 #include <stdlib.h>
 #include <stdio.h>

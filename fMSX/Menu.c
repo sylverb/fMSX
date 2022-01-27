@@ -12,7 +12,7 @@
 /*************************************************************/
 #include "MSX.h"
 #include "Console.h"
-#include "Sound.h"
+#include "SoundMSX.h"
 #include "Hunt.h"
 #include "MCF.h"
 

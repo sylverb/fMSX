@@ -3,7 +3,7 @@
 /**                           MSX.h                         **/
 /**                                                         **/
 /** This file contains declarations relevant to the drivers **/
-/** and MSX emulation itself. See Z80.h for #defines        **/
+/** and MSX emulation itself. See Z80MSX.h for #defines     **/
 /** related to Z80 emulation.                               **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1994-2021                 **/
@@ -14,10 +14,10 @@
 #ifndef MSX_H
 #define MSX_H
 
-#include "Z80.h"            /* Z80 CPU emulation             */
+#include "Z80MSX.h"         /* Z80 CPU emulation             */
 #include "V9938.h"          /* V9938 VDP opcode emulation    */
 #include "AY8910.h"         /* AY8910 PSG emulation          */
-#include "YM2413.h"         /* YM2413 OPLL emulation         */
+#include "YM2413MSX.h"      /* YM2413 OPLL emulation         */
 #include "SCC.h"            /* Konami SCC chip emulation     */
 #include "I8255.h"          /* Intel 8255 PPI emulation      */
 #include "I8251.h"          /* Intel 8251 UART emulation     */

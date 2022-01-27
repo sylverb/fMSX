@@ -13,7 +13,7 @@
 /*************************************************************/
 #ifdef DEBUG
 
-#include "Z80.h"
+#include "Z80MSX.h"
 
 #include <stdio.h>
 #include <ctype.h>

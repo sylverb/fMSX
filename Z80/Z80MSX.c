@@ -1,6 +1,6 @@
 /** Z80: portable Z80 emulator *******************************/
 /**                                                         **/
-/**                           Z80.c                         **/
+/**                         Z80MSX.c                        **/
 /**                                                         **/
 /** This file contains implementation for Z80 CPU. Don't    **/
 /** forget to provide RdZ80(), WrZ80(), InZ80(), OutZ80(),  **/
@@ -13,7 +13,7 @@
 /**     changes to this file.                               **/
 /*************************************************************/
 
-#include "Z80.h"
+#include "Z80MSX.h"
 #include "Tables.h"
 #include <stdio.h>
 

@@ -1,6 +1,6 @@
 /** Z80: portable Z80 emulator *******************************/
 /**                                                         **/
-/**                           Z80.h                         **/
+/**                        Z80MSX.h                         **/
 /**                                                         **/
 /** This file contains declarations relevant to emulation   **/
 /** of Z80 CPU.                                             **/
@@ -10,8 +10,8 @@
 /**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
 /*************************************************************/
-#ifndef Z80_H
-#define Z80_H
+#ifndef Z80MSX_H
+#define Z80MSX_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -185,4 +185,4 @@ void JumpZ80(word PC);
 #ifdef __cplusplus
 }
 #endif
-#endif /* Z80_H */
+#endif /* Z80MSX_H */

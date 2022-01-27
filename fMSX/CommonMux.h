@@ -4,7 +4,7 @@
 /**                                                         **/
 /** This file instantiates MSX screen drivers for every     **/
 /** possible screen depth. It includes common driver code   **/
-/** from Common.h and Wide.h.                               **/
+/** from CommonMSX.h and Wide.h.                            **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1994-2021                 **/
 /**     You are not allowed to distribute this software     **/
@@ -14,7 +14,7 @@
 #ifndef COMMONMUX_H
 #define COMMONMUX_H
 
-#include "Common.h"
+#include "CommonMSX.h"
 #include "Wide.h"
 
 #undef BPP8
@@ -49,7 +49,7 @@ extern void (*RefreshLine[MAXSCREEN+2])(byte Y);
 #define RefreshLine10    RefreshLine10_8
 #define RefreshLine12    RefreshLine12_8
 #define RefreshLineTx80  RefreshLineTx80_8
-#include "Common.h"
+#include "CommonMSX.h"
 #include "Wide.h"
 #undef pixel
 #undef FirstLine
@@ -100,7 +100,7 @@ extern void (*RefreshLine[MAXSCREEN+2])(byte Y);
 #define RefreshLine10    RefreshLine10_16
 #define RefreshLine12    RefreshLine12_16
 #define RefreshLineTx80  RefreshLineTx80_16
-#include "Common.h"
+#include "CommonMSX.h"
 #include "Wide.h"
 #undef pixel
 #undef FirstLine
@@ -151,7 +151,7 @@ extern void (*RefreshLine[MAXSCREEN+2])(byte Y);
 #define RefreshLine10    RefreshLine10_32
 #define RefreshLine12    RefreshLine12_32
 #define RefreshLineTx80  RefreshLineTx80_32
-#include "Common.h"
+#include "CommonMSX.h"
 #include "Wide.h"
 #undef pixel
 #undef FirstLine

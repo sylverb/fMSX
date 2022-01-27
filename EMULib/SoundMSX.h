@@ -1,18 +1,18 @@
 /** EMULib Emulation Library *********************************/
 /**                                                         **/
-/**                          Sound.h                        **/
+/**                       SoundMSX.h                        **/
 /**                                                         **/
 /** This file defines standard sound generation API and     **/
 /** functions needed to log soundtrack into a MIDI file.    **/
-/** See Sound.c and the sound drivers for the code.         **/ 
+/** See SoundMSX.c and the sound drivers for the code.      **/ 
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1996-2021                 **/
 /**     You are not allowed to distribute this software     **/
 /**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
 /*************************************************************/
-#ifndef SOUND_H
-#define SOUND_H
+#ifndef SOUNDMSX_H
+#define SOUNDMSX_H
 
 #include "EMULib.h"
 
@@ -176,4 +176,4 @@ extern struct SndDriverStruct SndDriver;
 #ifdef __cplusplus
 }
 #endif
-#endif /* SOUND_H */
+#endif /* SOUNDMSX_H */

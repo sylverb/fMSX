@@ -1,6 +1,6 @@
 /** fMSX: portable MSX emulator ******************************/
 /**                                                         **/
-/**                         Common.h                        **/
+/**                      CommonMSX.h                        **/
 /**                                                         **/
 /** This file contains standard screen refresh drivers      **/
 /** common for X11, VGA, and other "chunky" bitmapped video **/

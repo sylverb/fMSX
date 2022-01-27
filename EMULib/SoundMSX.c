@@ -1,17 +1,17 @@
 /** EMULib Emulation Library *********************************/
 /**                                                         **/
-/**                          Sound.c                        **/
+/**                       SoundMSX.c                        **/
 /**                                                         **/
 /** This file file implements core part of the sound API    **/
 /** and functions needed to log soundtrack into a MIDI      **/
-/** file. See Sound.h for declarations.                     **/
+/** file. See SoundMSX.h for declarations.                  **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1996-2021                 **/
 /**     You are not allowed to distribute this software     **/
 /**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
 /*************************************************************/
-#include "Sound.h"
+#include "SoundMSX.h"
 
 #include <stdio.h>
 #include <string.h>

@@ -13,7 +13,7 @@
 /*************************************************************/
 
 #include "AY8910.h"
-#include "Sound.h"
+#include "SoundMSX.h"
 #include <string.h>
 
 static const unsigned char Envelopes[16][32] =

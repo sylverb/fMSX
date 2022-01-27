@@ -1,18 +1,18 @@
 /** EMULib Emulation Library *********************************/
 /**                                                         **/
-/**                          YM2413.h                       **/
+/**                       YM2413MSX.h                       **/
 /**                                                         **/
 /** This file contains emulation for the OPLL sound chip    **/
 /** produced by Yamaha (also see OPL2, OPL3, OPL4 chips).   **/
-/** See YM2413.h for the code.                              **/
+/** See YM2413MSX.c for the code.                           **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1996-2021                 **/
 /**     You are not allowed to distribute this software     **/
 /**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
 /*************************************************************/
-#ifndef YM2413_H
-#define YM2413_H
+#ifndef YM2413MSX_H
+#define YM2413MSX_H
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -82,4 +82,4 @@ void Sync2413(register YM2413 *D,register byte Sync);
 #ifdef __cplusplus
 }
 #endif
-#endif /* YM2413_H */
+#endif /* YM2413MSX_H */

@@ -14,7 +14,7 @@
 #include "Console.h"
 #include "EMULib.h"
 #include "NetPlay.h"
-#include "Sound.h"
+#include "SoundMSX.h"
 #include "Record.h"
 
 #include <string.h>
@@ -44,7 +44,7 @@ const char *Title     = "fMSX 6.0";       /* Program version */
 Image NormScreen;          /* Main screen image              */
 Image WideScreen;          /* Wide screen image              */
 static pixel *WBuf;        /* From Wide.h                    */
-static pixel *XBuf;        /* From Common.h                  */
+static pixel *XBuf;        /* From CommonMSX.h               */
 static unsigned int XPal[80];
 static unsigned int BPal[256];
 static unsigned int XPal0;

@@ -14,7 +14,7 @@
 /*************************************************************/
 
 #include "MSX.h"
-#include "Sound.h"
+#include "SoundMSX.h"
 #include "Floppy.h"
 #include "SHA1.h"
 #include "MCF.h"
@@ -996,7 +996,7 @@ int ResetMSX(int NewMode,int NewRAMPages,int NewVRAMPages)
 /** RdZ80() **************************************************/
 /** Z80 emulation calls this function to read a byte from   **/
 /** address A in the Z80 address space. Also see OpZ80() in **/
-/** Z80.c which is a simplified code-only RdZ80() version.  **/
+/** Z80MSX.c which is a simplified code-only RdZ80() version**/
 /*************************************************************/
 byte RdZ80(word A)
 {

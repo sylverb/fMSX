@@ -4,7 +4,7 @@
 /**                                                         **/
 /** This file contains a table to convert sound frequencies **/
 /** into MIDI octave/note numbers. It is included from the  **/
-/** Sound.c and SndWin.c files.                             **/
+/** SoundMSX.c and SndWin.c files.                          **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1996-2021                 **/
 /**     You are not allowed to distribute this software     **/

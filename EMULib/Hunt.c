@@ -24,7 +24,7 @@
 #define MEMREAD16(A) (Rd6502(A)+((int)Rd6502(A+1)<<8))
 #define MEMREAD8(A)  Rd6502(A)
 #elif defined(VGB) || defined(MG) || defined(COLEM) || defined(SPECCY) || defined(FMSX)
-#include "Z80.h"
+#include "Z80MSX.h"
 #define MEMREAD32(A) (RdZ80(A)+((int)RdZ80(A+1)<<8)+((int)RdZ80(A+2)<<16)+((int)RdZ80(A+3)<<24))
 #define MEMREAD16(A) (RdZ80(A)+((int)RdZ80(A+1)<<8))
 #define MEMREAD8(A)  RdZ80(A)

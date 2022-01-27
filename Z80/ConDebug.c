@@ -25,7 +25,7 @@
 /** When CONDEBUG #defined, we use EMULib console.          **/
 /*************************************************************/
 
-#include "Z80.h"
+#include "Z80MSX.h"
 #include "Console.h"
 #include <stdlib.h>
 

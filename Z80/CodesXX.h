@@ -3,7 +3,7 @@
 /**                         CodesXX.h                       **/
 /**                                                         **/
 /** This file contains implementation for FD/DD tables of   **/
-/** Z80 commands. It is included from Z80.c.                **/
+/** Z80 commands. It is included from Z80MSX.c.             **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1994-2021                 **/
 /**     You are not allowed to distribute this software     **/

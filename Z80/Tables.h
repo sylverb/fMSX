@@ -5,7 +5,7 @@
 /** This file contains tables of used by Z80 emulation to   **/
 /** compute SIGN,ZERO, PARITY flags, and decimal correction **/
 /** There are also timing tables for Z80 opcodes. This file **/
-/** is included from Z80.c.                                 **/
+/** is included from Z80MSX.c.                              **/
 /**                                                         **/
 /** Copyright (C) Marat Fayzullin 1994-2021                 **/
 /**     You are not allowed to distribute this software     **/

@@ -94,7 +94,9 @@ void InitFDI(FDIDisk *D)
 /*************************************************************/
 void EjectFDI(FDIDisk *D)
 {
+#ifndef FMSX_NO_MALLOC
   if(D->Data) free(D->Data);
+#endif
   InitFDI(D);
 }
 
@@ -203,6 +205,7 @@ byte *NewFDI(FDIDisk *D,int Sides,int Tracks,int Sectors,int SecSize)
 /*************************************************************/
 int LoadFDI(FDIDisk *D,const char *FileName,int Format)
 {
+#ifndef FMSX_NO_MALLOC
   byte Buf[256],*P,*DDir;
   const char *T;
   int J,I,K,L,N;
@@ -599,7 +602,63 @@ int LoadFDI(FDIDisk *D,const char *FileName,int Format)
   D->Data   = P;
   D->Format = Format;
   return(Format);
+#else
+  return 0;
+#endif
 }
+
+/** LoadFDIFlash() *******************************************/
+/** Load a FDI disk image from flash memory                 **/
+/*************************************************************/
+#ifdef FMSX_NO_FILESYSTEM
+int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address, int size, int Format)
+{
+  byte Buf[256],*P,*DDir;
+  const char *T;
+  int J,I,K,L,N;
+
+  Format = FMT_FDI;
+  J = size;
+  /* Allocate memory and read file */
+  P = Address;
+
+  if(Address == NULL) { return(0); }
+  /* Verify .FDI format tag */
+  if(memcmp(P,"FDI",3))      { return(0); }
+  /* Read disk dimensions */
+  D->Sides   = FDI_SIDES(P);
+  D->Tracks  = FDI_TRACKS(P);
+  D->Sectors = 0;
+  D->SecSize = 0;
+  /* Check number of sectors and sector size */
+  for(J=FDI_SIDES(P)*FDI_TRACKS(P),DDir=FDI_DIR(P);J;--J)
+  {
+    /* Get number of sectors */
+    I=FDI_SECTORS(DDir);
+    /* Check that all tracks have the same number of sectors */
+    if(!D->Sectors) D->Sectors=I; else if(D->Sectors!=I) break;
+    /* Check that all sectors have the same size */
+    for(DDir+=7;I;--I,DDir+=7)
+    if(!D->SecSize) D->SecSize=FDI_SECSIZE(DDir);
+    else if(D->SecSize!=FDI_SECSIZE(DDir)) break;
+    /* Drop out if the sector size is not uniform */
+    if(I) break;
+  }
+  /* If no uniform sectors or sector size, set them to zeros */
+  if(J) D->Sectors=D->SecSize=0;
+
+  if(D->Verbose)
+	printf(
+	  "LoadFDIFlash(): Loaded '%s', %d sides x %d tracks x %d sectors x %d bytes\n",
+	  FileName,D->Sides,D->Tracks,D->Sectors,D->SecSize
+	);
+
+  /* Done */
+  D->Data   = P;
+  D->Format = Format;
+  return(Format);
+}
+#endif
 
 #ifdef ZLIB
 #undef fopen
@@ -619,6 +678,7 @@ int LoadFDI(FDIDisk *D,const char *FileName,int Format)
 /*************************************************************/
 static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int SecSize)
 {
+#ifndef FMSX_NO_FILESYSTEM
   int J,I,K,Result;
 
   Result = FDI_SAVE_OK;
@@ -642,6 +702,10 @@ static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 
   /* Done */
   return(Result);
+#else
+  // For now we are not supporting writing disk image in flash
+  return FDI_SAVE_FAILED;
+#endif
 }
 
 /** SaveIMGData() ********************************************/
@@ -652,6 +716,7 @@ static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 /*************************************************************/
 static int SaveIMGData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int SecSize)
 {
+#ifndef FMSX_NO_FILESYSTEM
   int J,I,K,Result;
 
   Result = FDI_SAVE_OK;
@@ -675,6 +740,10 @@ static int SaveIMGData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 
   /* Done */
   return(Result);
+#else
+  // For now we are not supporting writing disk image in flash
+  return FDI_SAVE_FAILED;
+#endif
 }
 
 /** SaveFDI() ************************************************/
@@ -687,6 +756,7 @@ static int SaveIMGData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 /*************************************************************/
 int SaveFDI(FDIDisk *D,const char *FileName,int Format)
 {
+#ifndef FMSX_NO_FILESYSTEM
   byte S[256];
   int I,J,K,C,L,Result;
   FILE *F;
@@ -847,6 +917,10 @@ int SaveFDI(FDIDisk *D,const char *FileName,int Format)
   /* Done */
   fclose(F);
   return(Result);
+#else
+  // For now we are not supporting writing disk image in flash
+  return FDI_SAVE_FAILED;
+#endif
 }
 
 /** SeekFDI() ************************************************/
@@ -932,6 +1006,7 @@ byte *LinearFDI(FDIDisk *D,int SectorN)
 /**************************************************************/
 byte *FormatFDI(FDIDisk *D,int Format)
 {
+#ifndef FMSX_NO_MALLOC
   if((Format<0) || (Format>=sizeof(Formats)/sizeof(Formats[0]))) return(0);
   
   return(NewFDI(D,
@@ -940,5 +1015,8 @@ byte *FormatFDI(FDIDisk *D,int Format)
     Formats[Format].Sectors,
     Formats[Format].SecSize
   ));
+#else
+  return(0);
+#endif
 }
 

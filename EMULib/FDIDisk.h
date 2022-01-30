@@ -100,6 +100,13 @@ byte *FormatFDI(FDIDisk *D,int Format);
 /*************************************************************/
 int LoadFDI(FDIDisk *D,const char *FileName,int Format);
 
+#ifdef FMSX_NO_FILESYSTEM
+/** LoadFDIFlash() *******************************************/
+/** Load a FDI disk image from flash memory                 **/
+/*************************************************************/
+int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address,int size,int Format);
+#endif
+
 /** SaveFDI() ************************************************/
 /** Save a disk image to a given file, in a given format    **/
 /** (see FMT_* #defines). Use the original format when      **/

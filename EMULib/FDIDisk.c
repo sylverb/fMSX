@@ -21,6 +21,9 @@
 #ifdef ZLIB
 #include <zlib.h>
 #endif
+#ifdef FMSX_LZMA_FDI
+#include "lzma.h"
+#endif
 
 #define IMAGE_SIZE(Fmt) \
   (Formats[Fmt].Sides*Formats[Fmt].Tracks*    \
@@ -36,6 +39,7 @@
 #define FDI_SECSIZE(S)    (SecSizes[(S)[3]<=4? (S)[3]:4])
 #define FDI_SECTOR(P,T,S) (FDI_TRACK(P,T)+(S)[5]+((int)((S)[6])<<8))
 
+#ifndef FMSX_NO_MALLOC
 static const struct { int Sides,Tracks,Sectors,SecSize; } Formats[] =
 {
   { 2,80,16,256 }, /* Dummy format */
@@ -54,6 +58,7 @@ static const struct { int Sides,Tracks,Sectors,SecSize; } Formats[] =
   { 2,80,10,512 }, /* FMT_SAD    - Sam Coupe disk */
   { 2,80,9,512 }   /* FMT_DSK    - Assuming 720kB MSX format */
 };
+#endif
 
 static const int SecSizes[] =
 { 128,256,512,1024,4096,0 };
@@ -61,6 +66,7 @@ static const int SecSizes[] =
 static const char FDIDiskLabel[] =
 "Disk image created by EMULib (C)Marat Fayzullin";
 
+#ifndef FMSX_NO_MALLOC
 static const byte TRDDiskInfo[] =
 {
   0x01,0x16,0x00,0xF0,0x09,0x10,0x00,0x00,
@@ -74,6 +80,7 @@ static int stricmpn(const char *S1,const char *S2,int Limit)
   for(;*S1&&*S2&&Limit&&(toupper(*S1)==toupper(*S2));++S1,++S2,--Limit);
   return(Limit? toupper(*S1)-toupper(*S2):0);
 }
+#endif
 
 /** InitFDI() ************************************************/
 /** Clear all data structure fields.                        **/
@@ -81,6 +88,9 @@ static int stricmpn(const char *S1,const char *S2,int Limit)
 void InitFDI(FDIDisk *D)
 {
   D->Format   = 0;
+#ifdef FMSX_LZMA_FDI
+  D->Compress = 0;
+#endif
   D->Data     = 0;
   D->DataSize = 0;
   D->Sides    = 0;
@@ -125,6 +135,9 @@ byte *NewFDI(FDIDisk *D,int Sides,int Tracks,int Sectors,int SecSize)
 
   /* Set disk dimensions according to format */
   D->Format   = FMT_FDI;
+#ifdef FMSX_LZMA_FDI
+  D->Compress = 0;
+#endif
   D->Data     = P;
   D->DataSize = I+K;
   D->Sides    = Sides;
@@ -282,6 +295,9 @@ int LoadFDI(FDIDisk *D,const char *FileName,int Format)
       /* Read disk dimensions */
       D->Sides   = FDI_SIDES(P);
       D->Tracks  = FDI_TRACKS(P);
+#ifdef FMSX_LZMA_FDI
+      D->Compress = ((P[3]&2)==2)?1:0;
+#endif
       D->Sectors = 0;
       D->SecSize = 0;
       /* Check number of sectors and sector size */
@@ -613,14 +629,13 @@ int LoadFDI(FDIDisk *D,const char *FileName,int Format)
 #ifdef FMSX_NO_FILESYSTEM
 int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address, int size, int Format)
 {
-  byte Buf[256],*P,*DDir;
-  const char *T;
-  int J,I,K,L,N;
+  byte *P,*DDir;
+  int J,I;
 
   Format = FMT_FDI;
   J = size;
   /* Allocate memory and read file */
-  P = Address;
+  P = (byte *)Address;
 
   if(Address == NULL) { return(0); }
   /* Verify .FDI format tag */
@@ -630,6 +645,9 @@ int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address, int size, int Fo
   D->Tracks  = FDI_TRACKS(P);
   D->Sectors = 0;
   D->SecSize = 0;
+#ifdef FMSX_LZMA_FDI
+  D->Compress = ((P[3]&2)==2)?1:0;
+#endif
   /* Check number of sectors and sector size */
   for(J=FDI_SIDES(P)*FDI_TRACKS(P),DDir=FDI_DIR(P);J;--J)
   {
@@ -648,10 +666,10 @@ int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address, int size, int Fo
   if(J) D->Sectors=D->SecSize=0;
 
   if(D->Verbose)
-	printf(
-	  "LoadFDIFlash(): Loaded '%s', %d sides x %d tracks x %d sectors x %d bytes\n",
-	  FileName,D->Sides,D->Tracks,D->Sectors,D->SecSize
-	);
+       printf(
+         "LoadFDIFlash(): Loaded '%s', %d sides x %d tracks x %d sectors x %d bytes\n",
+         FileName,D->Sides,D->Tracks,D->Sectors,D->SecSize
+       );
 
   /* Done */
   D->Data   = P;
@@ -676,9 +694,9 @@ int LoadFDIFlash(FDIDisk *D,const char *FileName,char *Address, int size, int Fo
 /** if any sectors were padded, FDI_SAVE_TRUNCATED if any   **/
 /** sectors were truncated, FDI_SAVE_FAILED if failed.      **/
 /*************************************************************/
+#ifndef FMSX_NO_FILESYSTEM
 static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int SecSize)
 {
-#ifndef FMSX_NO_FILESYSTEM
   int J,I,K,Result;
 
   Result = FDI_SAVE_OK;
@@ -702,11 +720,8 @@ static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 
   /* Done */
   return(Result);
-#else
-  // For now we are not supporting writing disk image in flash
-  return FDI_SAVE_FAILED;
-#endif
 }
+#endif
 
 /** SaveIMGData() ********************************************/
 /** Save uniform disk data, truncating or adding zeros as   **/
@@ -714,9 +729,9 @@ static int SaveDSKData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 /** if any sectors were padded, FDI_SAVE_TRUNCATED if any   **/
 /** sectors were truncated, FDI_SAVE_FAILED if failed.      **/
 /*************************************************************/
+#ifndef FMSX_NO_FILESYSTEM
 static int SaveIMGData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int SecSize)
 {
-#ifndef FMSX_NO_FILESYSTEM
   int J,I,K,Result;
 
   Result = FDI_SAVE_OK;
@@ -740,11 +755,8 @@ static int SaveIMGData(FDIDisk *D,FILE *F,int Sides,int Tracks,int Sectors,int S
 
   /* Done */
   return(Result);
-#else
-  // For now we are not supporting writing disk image in flash
-  return FDI_SAVE_FAILED;
-#endif
 }
+#endif
 
 /** SaveFDI() ************************************************/
 /** Save a disk image to a given file, in a given format    **/
@@ -976,6 +988,24 @@ byte *SeekFDI(FDIDisk *D,int Side,int Track,int SideID,int TrackID,int SectorID)
       /* FDI has variable sector numbers and sizes */
       D->Sectors   = FDI_SECTORS(P);
       D->SecSize   = FDI_SECSIZE(T);
+#ifdef FMSX_LZMA_FDI
+      if (D->SecSize <=512) 
+      {
+        if (D->Compress)
+        {
+          lzma_inflate(
+              D->Sector,
+              D->SecSize, // Sectors 
+              FDI_SECTOR(D->Data,P,T),
+              D->SecSize*2);
+        }
+        else
+        {
+          memcpy(D->Sector,FDI_SECTOR(D->Data,P,T),D->SecSize);
+        }
+        return D->Sector;
+      }
+#endif
       return(FDI_SECTOR(D->Data,P,T));
   }
 

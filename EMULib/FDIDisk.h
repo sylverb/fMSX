@@ -55,6 +55,9 @@ typedef unsigned char byte;
 typedef struct
 {
   byte Format;     /* Original disk format (FMT_*) */
+#ifdef FMSX_LZMA_FDI
+  int  Compress;   /* FDI lzma compressed */
+#endif
   int  Sides;      /* Sides per disk */
   int  Tracks;     /* Tracks per side */
   int  Sectors;    /* Sectors per track */
@@ -62,7 +65,9 @@ typedef struct
 
   byte *Data;      /* Disk data */
   int  DataSize;   /* Disk data size */
-
+#ifdef FMSX_LZMA_FDI
+  byte Sector[512];/* Disk data */
+#endif
   byte Header[6];  /* Current header, result of SeekFDI() */
   byte Verbose;    /* 1: Print debugging messages */
 } FDIDisk;

@@ -66,7 +66,9 @@ typedef struct
   byte *Data;      /* Disk data */
   int  DataSize;   /* Disk data size */
 #ifdef FMSX_LZMA_FDI
-  byte Sector[512];/* Disk data */
+  int  CachedSide;
+  int  CachedTrack;
+  byte Track[512*9];/* Disk data */
 #endif
   byte Header[6];  /* Current header, result of SeekFDI() */
   byte Verbose;    /* 1: Print debugging messages */

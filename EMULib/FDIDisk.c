@@ -90,6 +90,8 @@ void InitFDI(FDIDisk *D)
   D->Format   = 0;
 #ifdef FMSX_LZMA_FDI
   D->Compress = 0;
+  D->CachedSide = -1;
+  D->CachedTrack = -1;
 #endif
   D->Data     = 0;
   D->DataSize = 0;
@@ -989,21 +991,26 @@ byte *SeekFDI(FDIDisk *D,int Side,int Track,int SideID,int TrackID,int SectorID)
       D->Sectors   = FDI_SECTORS(P);
       D->SecSize   = FDI_SECSIZE(T);
 #ifdef FMSX_LZMA_FDI
-      if (D->SecSize <=512) 
+      if (D->SecSize*D->Sectors <= 512*9) 
       {
-        if (D->Compress)
-        {
-          lzma_inflate(
-              D->Sector,
-              D->SecSize, // Sectors 
-              FDI_SECTOR(D->Data,P,T),
-              D->SecSize*2);
+        // Update cached Track if needed
+        if ((Side != D->CachedSide) || (Track != D->CachedTrack)) {
+          if (D->Compress)
+          {
+              lzma_inflate(
+                  D->Track,
+                  D->SecSize*D->Sectors, // Track size
+                  FDI_TRACK(D->Data,P),
+                  D->SecSize*D->Sectors*2);
+          }
+          else
+          {
+            memcpy(D->Track,FDI_TRACK(D->Data,P),D->SecSize*D->Sectors);
+          }
+          D->CachedSide  = Side;
+          D->CachedTrack = Track;
         }
-        else
-        {
-          memcpy(D->Sector,FDI_SECTOR(D->Data,P,T),D->SecSize);
-        }
-        return D->Sector;
+        return D->Track+D->SecSize*(SectorID-1);
       }
 #endif
       return(FDI_SECTOR(D->Data,P,T));
